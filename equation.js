@@ -13,6 +13,18 @@ class Equation{
             this.translated = true;
             console.log(this.entry);
 
+            if(this.entry.includes('=')){
+                let separateEqual = this.entry.split('=');
+                let firstPart = separateEqual[0];
+                let secondPart = separateEqual[1];
+
+                // Replace + with - and so on
+                secondPart = secondPart.replaceAll('+', '&');
+                secondPart = secondPart.replaceAll('-', '+');
+
+                this.entry = firstPart + secondPart.replaceAll('&', '-');
+            }
+
             let factorArray = this.entry.split(/(\+|\-)/g);
             // console.log(`Array: ${factorArray}`);
 
@@ -40,7 +52,8 @@ class Equation{
             console.log(thingy);
 
             if(thingy.length !== 3){
-                console.log('An error has ocurred!');
+                // Expected to be a trinomial 
+                console.log('An error has ocurred! Check your syntax.');
                 process.exit();
             }
 
@@ -51,19 +64,38 @@ class Equation{
                     if(number === null){
                         // Expecting the string only has a variable
                         // so squared value is automatically 1
-                        this.squared = 1;
+                        if(noExponent.includes('-')){
+                            this.squared = -1;
+                        }else{ this.squared = 1; }
                     }
                     else{
-                        this.squared = parseInt(number);
+                        number = parseInt(number);
+                        if(noExponent.includes('-')){
+                            this.squared = -1 * parseInt(number);
+                        }else { this.squared = parseInt(number); }
                     }
                 }
                 else if(thingy[i].includes('x')){
                     let number = thingy[i].match(/\d+/g);
-                    this.common = parseInt(number);
+                    if(number === null){
+                        // Expecting the string only has a variable
+                        // so common value is automatically 1
+                        if(thingy[i].includes('-')){
+                            this.common = -1;
+                        }else{ this.common = 1; }
+                    }
+                    else{
+                        if(thingy[i].includes('-')){
+                            this.common = -1 * parseInt(number);
+                        }
+                        else{ this.common = parseInt(number) };   
+                    }
                 }
                 else{
                     let number = thingy[i].match(/\d+/g);
-                    this.independent = parseInt(number);
+                    if(thingy[i].includes('-')){
+                        this.independent = -1 * parseInt(number);
+                    }else{ this.independent = parseInt(number) };
                 }
             }
         }

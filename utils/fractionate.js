@@ -7,7 +7,6 @@ function fractionate(decimal){
 
     // Get before and after the decimal point
     decimal = decimal.toString();
-    console.log(`This is decimal ${decimal}`)
 
     
     let before = decimal.split('.')[0];
